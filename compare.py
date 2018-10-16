@@ -24,6 +24,8 @@ tests = ['X57_MPT_1o2C_lot1_030_0C.csv','X57_MPT_1o2C_lot1_031_0C.csv','X57_MPT_
 tests = ['X57_MPT_1C_lot1_030_0C.csv','X57_MPT_1C_lot1_031_0C.csv','X57_MPT_1C_lot1_032_0C.csv']  # start_list = [70,70,71] end_list = [14000, 14000, 14000]
 # everything
 tests = ['X57_MPT_1C_lot1_030_0C.csv','X57_MPT_1C_lot1_031_0C.csv','X57_MPT_1C_lot1_032_0C.csv', 'X57_MPT_1C_lot1_027_20C.csv','X57_MPT_1C_lot1_028_20C.csv','X57_MPT_1C_lot1_029_20C.csv', 'X57_MPT_1C_lot1_040_30C.csv','X57_MPT_1C_lot1_041_30C.csv','X57_MPT_1C_lot1_042_30C.csv', 'X57_MPT_1C_lot1_043_45C.csv','X57_MPT_1C_lot1_044_45C.csv','X57_MPT_1C_lot1_045_45C.csv']
+# 60 C compare
+tests = ['X57_MPT_1C_lot1_048_60C.csv','X57_MPT_1C_lot1_028_60C.csv'] # start_list = [76,62] end_list = [15100, 15000]
 
 fig, ax = plt.subplots()
 for idx,test in enumerate(tests):
@@ -41,11 +43,11 @@ for idx,test in enumerate(tests):
             row = line.strip().split(",")
             data.append([float(x) for x in (row[time_col], row[current_col], row[voltage_col], row[temp_col])])
 
-        #start_list = [70,70,71]
+        start_list = [76,62]
         #                0C        20C         30C       45C
-        start_list = [70,70,71,  71,71,70,  71,71,70,  72,70,71]
-        #end_list = [14000, 14000, 14000]
-        end_list = [14000, 14000, 14000, 14000, 14000, 14000, 15000, 15000, 15000, 15000, 15000, 15000]
+        #start_list = [70,70,71,  71,71,70,  71,71,70,  72,70,71]
+        end_list = [15100, 15000]
+        #end_list = [14000, 14000, 14000, 14000, 14000, 14000, 15000, 15000, 15000, 15000, 15000, 15000]
         start_idx = start_list[idx]
         end_idx = end_list[idx]
 
@@ -146,6 +148,6 @@ for idx,test in enumerate(tests):
     ax.plot(test_data[:,0], test_data[:,2])   # voltage
     #ax.plot(test_data[:,0], test_data[:,3])  # temperature
     #ax.plot(test_data[:,0], sim_data)        # sim voltage
-    ax.plot(test_data[:,0], sim_states[:,0])  # sim SOC
+    #ax.plot(test_data[:,0], sim_states[:,0])  # sim SOC
 
 plt.show()
