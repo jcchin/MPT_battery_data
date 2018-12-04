@@ -163,10 +163,11 @@ def ode_func(y, t):
     SOC = y[0]
     U_Th = y[1]
     T_batt = y[2]#temp_interp(t);
+    T_batt95 = y[3]
 
     Q_max = 3.0  #2.85 bottoms out, 3.0 doesn't make it to end of table
     mass_cell = 0.045
-    Cp_cell = 1020
+    Cp_cell = 1020*1.22
     eff_cell = 0.95
     Pack_Loss = 1.0
 
@@ -184,10 +185,15 @@ def ode_func(y, t):
     dXdt_SOC = -I_Li / (3600.0 * Q_max);
     dXdt_U_Th = -U_Th / (R_Th * C_Th) + I_Li / (C_Th);
     dXdt_T_batt = (I_Li**2 *(R_0+R_Th)) / (mass_cell*Cp_cell)
-    dXdt_T_batt = dXdt_T_batt - (.06*(y[2]-19.) / (mass_cell*Cp_cell))
+    dXdt_T_batt = dXdt_T_batt - (.066*(y[2]-19.) / (mass_cell*Cp_cell))
+    U_L = U_oc - U_Th - (I_Li * R_0)
+    dXdt_T_batt95 = (0.08*I_Li*U_L) / (mass_cell*Cp_cell)
+    dXdt_T_batt95 = dXdt_T_batt95 - (.066*(y[3]-19.) / (mass_cell*Cp_cell))
     # U_L = U_oc - U_Th - (I_Li * R_0);\
 
-    return [dXdt_SOC, dXdt_U_Th, dXdt_T_batt]
+    #eta = 1- (I_Li**2 *(R_0+R_Th))/(U_L*I_Li)
+
+    return [dXdt_SOC, dXdt_U_Th, dXdt_T_batt, dXdt_T_batt95]
 
 
 def compute_other_vars(y, t):
@@ -214,12 +220,11 @@ def compute_other_vars(y, t):
 
 
     U_L = U_oc - U_Th - (I_Li * R_0)
-
     return U_L
 
 
 
-sim_states = odeint(ode_func, y0=[1, 0, 19], t=test_data[:,0], hmax=4)# , atol=1e-12)
+sim_states = odeint(ode_func, y0=[1, 0, 19, 19], t=test_data[:,0], hmax=4)# , atol=1e-12)
 sim_data = compute_other_vars(sim_states, test_data[:,0])
 
 print('sim time', time.time() - st)
@@ -227,14 +232,17 @@ print(min(sim_states[:,0]))
 
 fig, (ax1,ax2) = plt.subplots(2,1)
 
-ax1.set_ylabel('Voltage')
+ax1.set_ylabel('Voltage (V)')
 ax1.plot(test_data[:,0], test_data[:,2])
 ax1.plot(test_data[:,0], sim_data, linewidth=1.)
+ax1.legend(['Test Data','Model'])
 
 # Thermal Plot
 ax2.set_ylabel('Temperature (C)')
 ax2.plot(test_data[:,0], test_data[:,3])
 ax2.plot(test_data[:,0], sim_states[:,2], linewidth=1.)
+ax2.plot(test_data[:,0], sim_states[:,3], linewidth=1.)
 ax2.set_xlabel('Time (s)')
+ax2.legend(['Test Data','I^2 * R','P * eff'])
 
 plt.show()

@@ -85,11 +85,11 @@ print("battery.tR_Th = np.array([", a(final10, separator=','), ", ", a(final11, 
 print("battery.tR_0 = np.array([", a(final15, separator=','), ", ", a(final16, separator=','), ", ", a(final17, separator=','), ", ", a(final18, separator=','), a(final19, separator=','), "])")
 
 # plot re-interpolated maps
-ax1.plot(bps, final0, label='0')
-ax1.plot(bps, final1, label='20')
-ax1.plot(bps, final2, label='30')
-ax1.plot(bps, final3, label='45')
-ax1.plot(bps, final4, label='60')
+ax1.plot(bps, final0, label='0$^\circ$C')
+ax1.plot(bps, final1, label='20$^\circ$C')
+ax1.plot(bps, final2, label='30$^\circ$C')
+ax1.plot(bps, final3, label='45$^\circ$C')
+ax1.plot(bps, final4, label='60$^\circ$C')
 ax2.plot(bps, final10, label='0') #skip C_Th, not exciting
 ax2.plot(bps, final11, label='20')
 ax2.plot(bps, final12, label='30')
@@ -107,4 +107,5 @@ ax1.legend()
 ax1.set_ylabel("V_oc")
 ax2.set_ylabel("R_Th")
 ax3.set_ylabel("R_0")
+ax3.set_xlabel("SOC")
 plt.show()

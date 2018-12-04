@@ -146,9 +146,10 @@ def curve(curr, Tem):
         # print(y, t)
         SOC = y[0]
         U_Th = y[1]
+        Q_max = 3.#y[2]
 
         T_batt = Tem;
-        Q_max = 3.0;  #2.85 bottoms out, 3.0 doesn't make it to end of table
+        #Q_max = 3.0;  #2.85 bottoms out, 3.0 doesn't make it to end of table
         mass_cell = 0.045;
         Cp_cell = 1020;
         eff_cell = 0.95;
@@ -172,9 +173,10 @@ def curve(curr, Tem):
 
         dXdt_SOC = -I_Li / (3600.0 * Q_max);
         dXdt_U_Th = -U_Th / (R_Th * C_Th) + I_Li / (C_Th);
+        #dXdt_Q_max = -(0*I_Li**2)/(3600*60) # reduce Q_max for high discharge
         # U_L = U_oc - U_Th - (I_Li * R_0);\
 
-        return [dXdt_SOC, dXdt_U_Th]
+        return [dXdt_SOC, dXdt_U_Th]#, dXdt_Q_max]
 
 
     def compute_other_vars(y, t):
@@ -213,6 +215,8 @@ def curve(curr, Tem):
     print('sim time', time.time() - st)
     print(min(sim_states[:,0]))
     ax.plot((ttime*curr)/3600., sim_data, linewidth=1.)
+    ax.set_xlabel('Discharge A*h')
+    ax.set_ylabel('Voltage (V)')
 
     return 
 
@@ -221,12 +225,10 @@ fig, ax = plt.subplots()
 
 
 
-curve(3,0)
+curve(1.5,20)
 curve(3,20)
-curve(3,30)
-curve(3,40)
-curve(3,45)
-curve(3,60)
-ax.legend(['0','20','40','45','60'])
+curve(6,20)
+curve(9,20)
+ax.legend(['0.5C','1C','2C','3C'])
 
 plt.show()
